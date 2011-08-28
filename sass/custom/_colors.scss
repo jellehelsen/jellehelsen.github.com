@@ -11,8 +11,9 @@
 
 
 /* To use the light Solarized highlighting theme uncomment the following line */
-//$solarized: light
-
+/*$solarized: light;*/
+$header-bg: black;
+$page-bg: image-url('backgroundTile.png');
 /* If you want to tweak the Solarized colors you can do that here */
 //$base03:          #002b36; //darkest blue
 //$base02:          #073642; //dark blue

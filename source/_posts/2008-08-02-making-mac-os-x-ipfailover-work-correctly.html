@@ -1,0 +1,17 @@
+---
+layout: post
+title: Making Mac OS X ipfailover work correctly
+category: Mac OS X
+---
+IP failover is a wonderful technology. The Mac OS X implementation does have a major problem. <!--more-->When the fallen host comes back online, it will find a duplicate ip address and disables it's network interface. So bringing the failed host back online requires you to bring down the failover host and thus making you service unavailable. There is a way to avoid this problem. 
+<p>Create a StartupItem with one line:</p>
+<pre>
+ifconfig en0 1.2.3.4
+</pre>
+<p>
+This will force your host online, ignoring the fact that there is another host online with the same ip address. After this the failover host "sees" the host coming online and will release the ip address.
+</p>
+<p>Usualy AFP refuses to start automatically after booting so I start it manually with the same script:
+  <pre>/usr/sbin/serveradmin start afp</pre>
+</p>
+<p>An example StartupItem can be found <a href="http://www.hcode.be/wordpress/wp-content/uploads/2008/12/ipfallback.zip" title="IPFallback.zip">here</a>.</p>

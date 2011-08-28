@@ -1,4 +1,4 @@
-$max-width: 1200px !default;
+$max-width: 972px !default;
 
 // Padding used for layout margins
 $pad-min: 18px !default;
@@ -73,15 +73,6 @@ aside[role=sidebar] {
   background-color: lighten($sidebar-bg, 2);
   border-top: 1px solid $sidebar-border;
   @extend .group;
-}
-
-.flex-content { max-width: 100%; height: auto; }
-
-.basic-alignment {
-  &.left { float: left; margin-right: 1.5em; }
-  &.right { float: right; margin-left: 1.5em; }
-  &.center { display:block; margin: 0 auto 1.5em; }
-  &.left, &.right { margin-bottom: .8em; }
 }
 
 .toggle-sidebar { &, .no-sidebar & { display: none; }}

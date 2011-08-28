@@ -1,0 +1,18 @@
+---
+layout: post
+title: Oh my zsh!!
+comments: false
+---
+Since a few months I am using zsh for my day-to-day terminal work instead of bash. If you haven't heard of zsh before, be sure to "check it out":http://www.zsh.org. So, what makes it different from bash or any other shell your used to?
+<!--more-->
+# *It is very similar to bash* what makes it very easy to learn. There is nothing to learn when you're used to bash because everything works exactly like bash but you get a lot of extra's.
+# *It has really cool autocomplete functionality*.
+ ** It can present suggestions in a menu that you can navigate in with your arrow keys
+ ** It can complete command options (typing @ls -<tab>@ gives you possible actions and it's meaning).
+ ** It can complete hosts from your hosts file when using network commands or ssh's known_hosts file when using ssh, ...
+# *Typo correction*
+How many times have you typed small errors like @ssj remote_server@ instead of @ssh remote_server@? When that happens with zsh I get a question like @zsh: correct 'ssj' to 'ssh' [nyae]?@ Very cool indeed. 
+# *Intelligent history*
+ ** *Shared history across sessions*: How many times have you lost that super complex command from your history because you had more than one terminal window open? No more with zsh!
+ ** *prefix filtered history*: No more browsing through your complete history to find that complex command you can't remember completely. Type the start of a command and then use your up arrow key to navigate through your filtered history containing only commands starting with the part you already typed.
+# *Oh-my-zsh*: This is an awesome extension for zsh. It features extra functions and auto-complete helpers, themes and a configurable plugin system. You can find it "here":http://github.com/robbyrussell/oh-my-zsh. You can find my fork with my custom theme and a plugin for iTerm "here":http://github.com/jellehelsen/oh-my-zsh. You should try it, it really makes switching to zsh worth it.

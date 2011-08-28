@@ -1,0 +1,11 @@
+---
+layout: post
+title: Printing booklets with pdfjam
+---
+Recently I wanted to create a booklet from a pdf I created with "XeLaTex":http://scripts.sil.org/xetex . I found out that "MacTex":http://www.tug.org/mactex/ comes with a tool for that. Pdfjam and it's front-end pdfbook are the perfect tools for the job.
+<!--more-->
+{% highlight bash %}
+pdfbook --short-edge file.pdf
+{% endhighlight %}
+
+This creates a file name file-book.pdf. This file is ready for duplex printing and folding into a booklet afterwards.

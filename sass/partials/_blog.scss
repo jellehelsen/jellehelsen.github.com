@@ -44,12 +44,21 @@ article {
     line-height: 1.3em;
   }
   img, video, .flash-video {
-    @extend .flex-content;
-    @extend .basic-alignment;
-    @include shadow-box;
+    max-width: 100%;
+    height: auto;
+    border: .5em solid #fff;
+    @include border-radius(.3em);
+    @include box-shadow(rgba(#000, .15) 0 1px 4px);
+    @include box-sizing(border-box);
+    display: block;
+    margin: 0 auto 1.5em;
   }
-  video, .flash-video { margin: 0 auto 1.5em; }
-  video { display: block; width: 100%; }
+  img {
+    &.left { float: left; margin-right: 1.5em; }
+    &.right { float: right; margin-left: 1.5em; }
+    &.left, &.right { margin-bottom: .8em; }
+  }
+  video { display: block; margin-bottom: 1.5em; width: 100%; }
   .flash-video {
     > div {
       position: relative;
@@ -103,6 +112,7 @@ article + article {
     color: mix($text-color, $text-color-light);
     @extend .serif;
     @include transition(background-color .5s);
+    @include border-radius(5px,5px);
     &:hover {
       background: $link-color-hover;
       text-shadow: none;

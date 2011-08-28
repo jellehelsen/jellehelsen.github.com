@@ -1,0 +1,14 @@
+---
+layout: post
+title: Updated alternative activerecordproxies with a rucola plugin
+category: Rucola
+---
+I have recently updated my alternative activerecordproxy class and created a rucola plugin for it. The name of the class is now HCODE::AltActiveRecordProxy, but this may change in the future since I&#8217;ve been mailing with Eloy Duran about merging my changes into RubyCocoa.
+<!--more-->
+The updated altactiverecordproxy source file can be downloaded "here":http://www.hcode.be/downloads/alt_activerecord_proxy.rb . The rucola plugin can be found "here":http://www.hcode.be/wordpress/wp-content/uploads/2008/02/alt-activerecord-proxies.zip
+
+Updated: a subversion repository has been set up. You can now install the plugin in your rucola application with the following command:
+
+{% highlight bash %}
+./script/plugin install https://svn.hcode.be/trunk/alt_activerecord_proxies
+{% endhighlight %}

@@ -1,0 +1,49 @@
+---
+layout: post
+title: Kerberos and load balancing
+comments: false
+categories: - Mac OS X
+            - Directory Systems
+---
+Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p>
+      It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
+    </p>
+    <h4>
+      Step 1: Setting up DNS
+    </h4>
+    <p>
+      The first thing to configure when setting up kerberos is always DNS. Usually when using round robin you configure a different A record for each host. Then you would setup 1 CNAME record pointing to those A records. But: Kerberos is very dependent a A records and PTR records for each host. So to satisfy both I created 2 A records, both with the same name, but a different ip address. Then I created a PTR record for each ip address, both pointing to the same name.
+    </p>
+    <ul>
+      <li>Two A records for homes.example.com with 2 ip adresses 192.168.0.2 and 192.168.0.3
+      </li>
+      <li>PTR records for both ip addresses pointing to homes.example.com
+      </li>
+    </ul>
+    <h4>
+      Step 2: Setting up Kerberos
+    </h4>
+    <p>
+      I tested this setup on Mac OS X Server 10.5. This means kerberos setup is a little different than on other platforms. The principle remains the same on other platforms.
+    </p>
+    <ul>
+      <li>First configure both servers to use kerberos. On Mac OS X this is as simple as clicking a button.
+      </li>
+      <li>If you're working with Mac OS X Server your kerberos should be working automatically. After binding your second server to the directory, the kerberos configuration on the first host will break. This is due to the way the keytab is created. Normally it is created by doing ktadd in kadmin. Mac OS X Server does this automatically for you. This causes the version number of the hosts principle to be incremented. This means the keytab of host 1 is out of date.
+      </li>
+      <li>Next, copy the necessary keytab entries using ktutil or copy the complete keytab file from host 2 back to host 1. Since you already have extensive knowledge of kerberos I assume you know how it's done. For those of you who don't: 
+        <ul>
+          <li>to start ktutil on the commandline just open a terminal window and type <pre>ktutil</pre></li>
+          <li>to read in the keytab of both hosts type <pre>rkt /path/to/keypath</pre></li>
+          <li>list all the loaded entries and their slot numbers with <pre>list</pre></li>
+          <li>delete all the unnecessary entries with (replace [slot with the correct slot number from the previous step])<pre>delent [slot]</pre></li>
+          <li>write out the remaining entries to a new keytab file with <pre>wkt /path/to/new/keytab</pre></li>
+        </ul>
+      </li>
+      <li>install the new keytab file on both servers</li>
+    </ul>
+    <p>
+      This should get you up and running. You should now have a load-balanced, kerberized server setup. I use it for afp home directories, but it should work for any service.</p>
+    <p>
+       I only tested this with Mac OS X 10.5 Server, but the principles of kerberos are the same on every platform, so it should work on other platforms but your milage may vary.
+    </p>
