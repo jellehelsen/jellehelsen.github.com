@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Security | #!/dev/random]]></title>
+  <link href="http://www.hcode.be/blog/categories/security/atom.xml" rel="self"/>
+  <link href="http://www.hcode.be/"/>
+  <updated>2015-11-28T16:07:54+01:00</updated>
+  <id>http://www.hcode.be/</id>
+  <author>
+    <name><![CDATA[Jelle Helsen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SSH password guessing (part 2)]]></title>
+    <link href="http://www.hcode.be/2010/12/03/ssh-password-guessing-part2.html"/>
+    <updated>2010-12-03T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2010/12/03/ssh-password-guessing-part2</id>
+    <content type="html"><![CDATA[<p>After disabling password login for ssh I was still seeing password guessing. I'm confident disabling password login should be sufficient, but I was still not happy with the situation. I'm not really happy that the firewall built into Mac OS X has no option to deal with this situation.</p>
+
+<h3>Presenting SshGuard</h3>
+
+<!--more-->
+
+
+<p>Since Mac OS X has no solution for this out of the box, I created one. SshGuard is a script that monitors the log file /var/log/secure.log for ssh errors containing "Invalid user" or "authentication error". When a host has too many failed authentications, his ip address gets blocked by the firewall.</p>
+
+<p>SshGuard is written in ruby and distributed as a gem. Installation is simple:</p>
+
+<p>``` bash</p>
+
+<pre><code>sudo gem install ssh_guard
+sudo ssh_guard -i #to install and load the launchd plist file
+</code></pre>
+
+<p>```</p>
+
+<p>After this launchd will keep SshGuard running at all times. It will keep monitoring the log files for authentication errors and block hosts that are trying to guess passwords. Host blocking rules will be added with rule number 100 to keep it among the first rules to be applied.</p>
+
+<p>At the moment it only works on Mac OS X. It's only been tested on Mac OS X Server 10.6, but it should work on any Mac OS X system. It could probably be ported to other Unix system without much trouble. The source code is available <a href="http://github.com/jellehelsen/ssh_guard">here</a>. Any bugs or feature request can be reported <a href="http://github.com/jellehelsen/ssh_guard/issues">here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SSH password guessing]]></title>
+    <link href="http://www.hcode.be/2010/11/29/ssh-password-guessing.html"/>
+    <updated>2010-11-29T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2010/11/29/ssh-password-guessing</id>
+    <content type="html"><![CDATA[<p>This weekend I caught a bot trying to get into my server using ssh.<!--more--> This was what I saw in my log file:</p>
+
+<p>bc. Nov 24 21:15:53 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+Nov 24 21:15:54 mini sshd[55682]: in pam_sm_authenticate(): Failed to determine Kerberos principal name.
+Nov 24 21:15:54 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+Nov 24 21:15:54 mini sshd[55687]: in pam_sm_authenticate(): Failed to determine Kerberos principal name.
+Nov 24 21:15:54 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+...
+Nov 24 21:15:56 mini sshd[55670]: Failed keyboard-interactive/pam for root from 200.106.67.47 port 4910 ssh2
+Nov 24 21:16:09 mini sshd[55715]: reverse mapping checking getaddrinfo for client-200.106.67.47.speedy.net.pe [200.106.67.47] failed - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 15:30:35 mini sshd[92616]: Address 212.156.122.94 maps to static.turktelekom.com.tr, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:19 mini sshd[1595]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...
+Nov 25 18:57:20 mini sshd[1605]: Invalid user camilla from 81.181.90.106
+Nov 25 18:57:20 mini sshd[1611]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1615]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1619]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1619]: Invalid user vava from 81.181.90.106
+Nov 25 18:57:22 mini sshd[1625]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:22 mini sshd[1625]: Invalid user vava from 81.181.90.106
+Nov 25 18:57:23 mini sshd[1631]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...
+Nov 25 19:31:46 mini sshd[8201]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:46 mini sshd[8207]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 19:31:46 mini sshd[8207]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:47 mini sshd[8213]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 19:31:47 mini sshd[8213]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:47 mini sshd[8219]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...</p>
+
+<p>These are just some snippets from the log (/var/log/secure.log).
+If one of these IP addresses is you then get those trojans of your computer.</p>
+
+<p>h3. Counter measures</p>
+
+<p>Thanks to well chosen passwords, none of my accounts seemed to be compromised. Nevertheless I disabled password login for ssh. This is how it's done:</p>
+
+<h1>Make sure public key authentication works. If it doesn't you will lock yourself out when disabling password authentication.</h1>
+
+<h1>Open /etc/sshd_config with your favorite editor.</h1>
+
+<h1>Uncomment the line where it says "PasswordAuthentication no"</h1>
+
+<h1>Disable ssh's PAM support by uncommenting the line "UsePAM no"</h1>
+
+<h1>Restart sshd</h1>
+
+<p>Now ssh now longer accepts password authentication and hackers can try to guess passwords as long as they want.</p>
+
+<p>NB: Since disabling password authentication the attacks continue. At least I'm confident there are no passwords to be guessed. I'm still searching for a way to dynamicly block these ip addresses with the firewall.</p>
+]]></content>
+  </entry>
+  
+</feed>

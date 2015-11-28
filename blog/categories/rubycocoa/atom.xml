@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: RubyCocoa | #!/dev/random]]></title>
+  <link href="http://www.hcode.be/blog/categories/rubycocoa/atom.xml" rel="self"/>
+  <link href="http://www.hcode.be/"/>
+  <updated>2015-11-28T16:07:54+01:00</updated>
+  <id>http://www.hcode.be/</id>
+  <author>
+    <name><![CDATA[Jelle Helsen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Alternative ActiveRecordProxies]]></title>
+    <link href="http://www.hcode.be/2008/01/25/alternative-activerecordproxies.html"/>
+    <updated>2008-01-25T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/01/25/alternative-activerecordproxies</id>
+    <content type="html"><![CDATA[<p>The original ActiveRecordProxies have one very annoying problem. When you change a value on an object, the object is immediately saved to the database. This way you miss the best part about the Active Record pattern and it makes bindings unusable. When a user changes a value in the view, he should be able to save or reload. Saving the change immediately to the database would make that almost impossible.</p>
+
+
+<!--more-->
+
+
+<p>At first I tried fixing ActiveRecordProxy myself, but that didn't work. So I decided to start from scratch. The result of can be downloaded <a href="http://www.hcode.be/downloads/hcode_activerecord_proxy.rb">here</a> </p>
+
+
+<p>What's different from the normal ActiveRecordProxy class:
+  <ul>
+    <li>support for save and reload.</li>
+    <li>minimal support for validations. If you use saveWithError, an NSError object is returned when saving fails. The userDict of this error should contain the validation errors.</li>
+    <li><s>rails like setterMethods: you can now use <pre>CustomerProxy.name = "test"</pre> instead of <pre>CustomerProxy.setValue_forKey("test", :name)</pre></s>
+(Updated: this already seems to work on normal ActiveRecordProxy objects)</li>
+  </ul>
+</p>
+
+
+<p>To use it, put it in your load path and use it as your proxy superclass. If you're using rucola, I will post a plugin in a couple of days. If you're not using it yet, you should <a href="http://rucola.rubyforge.org/">check it out</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

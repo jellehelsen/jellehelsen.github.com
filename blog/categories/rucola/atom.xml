@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rucola | #!/dev/random]]></title>
+  <link href="http://www.hcode.be/blog/categories/rucola/atom.xml" rel="self"/>
+  <link href="http://www.hcode.be/"/>
+  <updated>2015-11-28T16:07:54+01:00</updated>
+  <id>http://www.hcode.be/</id>
+  <author>
+    <name><![CDATA[Jelle Helsen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Updated alternative activerecordproxies with a rucola plugin]]></title>
+    <link href="http://www.hcode.be/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin.html"/>
+    <updated>2008-02-07T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin</id>
+    <content type="html"><![CDATA[<p>I have recently updated my alternative activerecordproxy class and created a rucola plugin for it. The name of the class is now HCODE::AltActiveRecordProxy, but this may change in the future since I&#8217;ve been mailing with Eloy Duran about merging my changes into RubyCocoa.</p>
+
+<!--more-->
+
+
+<p>The updated altactiverecordproxy source file can be downloaded "here":http://www.hcode.be/downloads/alt_activerecord_proxy.rb . The rucola plugin can be found "here":http://www.hcode.be/wordpress/wp-content/uploads/2008/02/alt-activerecord-proxies.zip</p>
+
+<p>Updated: a subversion repository has been set up. You can now install the plugin in your rucola application with the following command:</p>
+
+<p><div>
+  <pre><code class='bash'>./script/plugin install https://svn.hcode.be/trunk/alt_activerecord_proxies</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple Rucola console script]]></title>
+    <link href="http://www.hcode.be/2008/01/29/simple-rucola-console-script.html"/>
+    <updated>2008-01-29T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/01/29/simple-rucola-console-script</id>
+    <content type="html"><![CDATA[<p>I made a small script to help in debugging rucola projects. It will start an interactive irb session and boot your rucola app in the test environment.I saved it in ‘script/console’. You can use it to experiment with your classes.</p>
+
+<p>``` ruby</p>
+
+<pre><code>#!/usr/bin/env ruby
+ENV['RUBYCOCOA_ROOT'] = File.join(File.dirname(__FILE__), '..')
+ENV['RUBYCOCOA_ENV'] = 'test'
+libs = "-r rubygems"
+libs &lt;&lt; " -r rucola"
+libs &lt;&lt; " -r #{ENV['RUBYCOCOA_ROOT']}/config/boot"
+exec "irb #{libs}"
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>

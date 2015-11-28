@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[#!/dev/random]]></title>
+  <link href="http://www.hcode.be/atom.xml" rel="self"/>
+  <link href="http://www.hcode.be/"/>
+  <updated>2015-11-28T16:07:54+01:00</updated>
+  <id>http://www.hcode.be/</id>
+  <author>
+    <name><![CDATA[Jelle Helsen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How not to do customer support.]]></title>
+    <link href="http://www.hcode.be/2012/11/18/how-not-to-do-customer-support.html"/>
+    <updated>2012-11-18T20:42:00+01:00</updated>
+    <id>http://www.hcode.be/2012/11/18/how-not-to-do-customer-support</id>
+    <content type="html"><![CDATA[<p>This is the story of how my internet provider (Telenet) screwed up big time. I have a business account with them so I can have a fixed IP address and a help desk that knows what&#8217;s going on. That has worked well for me, until now. Here is an overview of the events:</p>
+
+<!-- more -->
+
+
+<ul>
+<li> On monday the 5th of november I installed a new firewall. I tried changing the MAC address linked to my fixed IP on their web management application. Of course (I tried this with customers before) this didn&#8217;t work.</li>
+<li> I called the help desk to notify them of the change of my MAC address. I&#8217;ve done this before for customers, usually it is fixed within 5 minutes. This time there seemed to be a problem. The help desk guy (very friendly) said that for some reason he could not change things in my account. I had been assigned a fixed ip address, but not the one I had before. He would escalate the problem to the appropriate department and call me back the next day (it was after business hours and that department was not available). I told him I needed my fixed ip address because of an array of VPN connections and I was not keen on reconfiguring all of them.</li>
+<li> Since they did not contact me the next 2 days, I called them again on Thursday. The help desk employee checked the status of my problem with the appropriate department while I held, but could not report any progress. All he could tell me was &#8220;They&#8217;re working on it&#8221;. My problem would be fixed today and he would call me back as soon as possible. So I agreed, hung up the phone and waited. But guess what: he did not call back.</li>
+<li> So Friday, 5 days after reporting the issue, I called them, again! Same procedure, checking with department, no news, will call back later today! This time he did call back, only to report that there was no news and he would check back in on monday.</li>
+<li> On monday I was at the TEDxBrussels event, so my phone was off most of the day. But my voicemail had no message from my internet provider. I was starting to get pissed. By now a full week has gone by, and not a hint of a solution. Even worse, I started noticing connection drops. The internet connection would go down anywhere from 1 to 5 times a day.</li>
+<li> I was out all day on tuesday so I called back on wednesday. The normal ritual occurred (check with department, no news, working on it). I pointed out that I have that business account for a reason. I pay extra to have a fixed ip and a help desk that can solve a problem within a reasonable time. Both of which were not being delivered. I also notified them of the connection drops, they said it was a problem with my firewall, I disagreed. They told me they could send a technician, but if he found no problem with their installation, I would have to pay for the costs.</li>
+<li> I started monitoring those connection drops, trying to prove it was not a problem with my installation. When I had collected enough compelling proof that it was not a problem with my installation, I called them again. Suddenly they were able to see the errors on their systems so they added that problem to my outstanding (10 days by now) ticket.</li>
+<li> Several days went by, repeating the same ritual over and over again. They promise to call me, they don&#8217;t call me, I call them, they have no news, I get pissed. Ultimatly friday evening I sent an email to the CEO of Telenet explaining the situation and asking him if he could get his helpdesk to fix the problems.</li>
+</ul>
+
+
+<p>By now it is Sunday, November 18. Almost a full two weeks after I first reported the problem. I realize that, if they would have told me on day 1 that they could not fix the problem, I would have been pissed, but I would have lost less time. I could have reconfigured all of my VPN&#8217;s in less time then I would have spent on the phone with the help desk.</p>
+
+<p><strong>Update:</strong></p>
+
+<p>Apparently my mail the the CEO had effect. Today (monday) by 6 in the evening my problem was fixed.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SSH password guessing (part 2)]]></title>
+    <link href="http://www.hcode.be/2010/12/03/ssh-password-guessing-part2.html"/>
+    <updated>2010-12-03T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2010/12/03/ssh-password-guessing-part2</id>
+    <content type="html"><![CDATA[<p>After disabling password login for ssh I was still seeing password guessing. I&#8217;m confident disabling password login should be sufficient, but I was still not happy with the situation. I&#8217;m not really happy that the firewall built into Mac OS X has no option to deal with this situation.</p>
+
+<h3>Presenting SshGuard</h3>
+
+<!--more-->
+
+
+<p>Since Mac OS X has no solution for this out of the box, I created one. SshGuard is a script that monitors the log file /var/log/secure.log for ssh errors containing &#8220;Invalid user&#8221; or &#8220;authentication error&#8221;. When a host has too many failed authentications, his ip address gets blocked by the firewall.</p>
+
+<p>SshGuard is written in ruby and distributed as a gem. Installation is simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo gem install ssh_guard
+</span><span class='line'>sudo ssh_guard -i <span class="c">#to install and load the launchd plist file</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After this launchd will keep SshGuard running at all times. It will keep monitoring the log files for authentication errors and block hosts that are trying to guess passwords. Host blocking rules will be added with rule number 100 to keep it among the first rules to be applied.</p>
+
+<p>At the moment it only works on Mac OS X. It&#8217;s only been tested on Mac OS X Server 10.6, but it should work on any Mac OS X system. It could probably be ported to other Unix system without much trouble. The source code is available <a href="http://github.com/jellehelsen/ssh_guard">here</a>. Any bugs or feature request can be reported <a href="http://github.com/jellehelsen/ssh_guard/issues">here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SSH password guessing]]></title>
+    <link href="http://www.hcode.be/2010/11/29/ssh-password-guessing.html"/>
+    <updated>2010-11-29T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2010/11/29/ssh-password-guessing</id>
+    <content type="html"><![CDATA[<p>This weekend I caught a bot trying to get into my server using ssh.<!--more--> This was what I saw in my log file:</p>
+<pre><code>Nov 24 21:15:53 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+Nov 24 21:15:54 mini sshd[55682]: in pam_sm_authenticate(): Failed to determine Kerberos principal name.
+Nov 24 21:15:54 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+Nov 24 21:15:54 mini sshd[55687]: in pam_sm_authenticate(): Failed to determine Kerberos principal name.
+Nov 24 21:15:54 mini sshd[55670]: error: PAM: authentication error for root from 200.106.67.47 via 192.168.1.2
+...
+Nov 24 21:15:56 mini sshd[55670]: Failed keyboard-interactive/pam for root from 200.106.67.47 port 4910 ssh2
+Nov 24 21:16:09 mini sshd[55715]: reverse mapping checking getaddrinfo for client-200.106.67.47.speedy.net.pe [200.106.67.47] failed - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 15:30:35 mini sshd[92616]: Address 212.156.122.94 maps to static.turktelekom.com.tr, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:19 mini sshd[1595]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...
+Nov 25 18:57:20 mini sshd[1605]: Invalid user camilla from 81.181.90.106
+Nov 25 18:57:20 mini sshd[1611]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1615]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1619]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:21 mini sshd[1619]: Invalid user vava from 81.181.90.106
+Nov 25 18:57:22 mini sshd[1625]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 18:57:22 mini sshd[1625]: Invalid user vava from 81.181.90.106
+Nov 25 18:57:23 mini sshd[1631]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...
+Nov 25 19:31:46 mini sshd[8201]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:46 mini sshd[8207]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 19:31:46 mini sshd[8207]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:47 mini sshd[8213]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+Nov 25 19:31:47 mini sshd[8213]: User postgres not allowed because shell /dev/null is not executable
+Nov 25 19:31:47 mini sshd[8219]: Address 81.181.90.106 maps to host2.openmind.is.ew.ro, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+...</code></pre>
+<p>These are just some snippets from the log (/var/log/secure.log).<br />
+If one of these IP addresses is you then get those trojans of your computer.</p>
+<h3>Counter measures</h3>
+<p>Thanks to well chosen passwords, none of my accounts seemed to be compromised. Nevertheless I disabled password login for ssh. This is how it&#8217;s done:</p>
+<ol>
+	<li>Make sure public key authentication works. If it doesn&#8217;t you will lock yourself out when disabling password authentication.</li>
+	<li>Open /etc/sshd_config with your favorite editor.</li>
+	<li>Uncomment the line where it says &#8220;PasswordAuthentication no&#8221;</li>
+	<li>Disable ssh&#8217;s <span class="caps">PAM</span> support by uncommenting the line &#8220;UsePAM no&#8221;</li>
+	<li>Restart sshd</li>
+</ol>
+<p>Now ssh now longer accepts password authentication and hackers can try to guess passwords as long as they want.</p>
+<p>NB: Since disabling password authentication the attacks continue. At least I&#8217;m confident there are no passwords to be guessed. I&#8217;m still searching for a way to dynamicly block these ip addresses with the firewall.</p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Printing booklets with pdfjam]]></title>
+    <link href="http://www.hcode.be/2010/10/16/printing-booklets-with-pdfjam.html"/>
+    <updated>2010-10-16T00:00:00+02:00</updated>
+    <id>http://www.hcode.be/2010/10/16/printing-booklets-with-pdfjam</id>
+    <content type="html"><![CDATA[<p>Recently I wanted to create a booklet from a pdf I created with <a href="http://scripts.sil.org/xetex">XeLaTex</a> . I found out that <a href="http://www.tug.org/mactex/">MacTex</a> comes with a tool for that. Pdfjam and it&#8217;s front-end pdfbook are the perfect tools for the job.<br />
+<!--more--><br />
+<div><br />
+  <pre><code class='bash'>pdfbook --short-edge file.pdf</code></pre></p>
+</div>
+<p>This creates a file name file-book.pdf. This file is ready for duplex printing and folding into a booklet afterwards.</p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Oh my zsh!!]]></title>
+    <link href="http://www.hcode.be/2010/10/13/oh-my-zsh.html"/>
+    <updated>2010-10-13T00:00:00+02:00</updated>
+    <id>http://www.hcode.be/2010/10/13/oh-my-zsh</id>
+    <content type="html"><![CDATA[<p>Since a few months I am using zsh for my day-to-day terminal work instead of bash. If you haven&#8217;t heard of zsh before, be sure to <a href="http://www.zsh.org">check it out</a>. So, what makes it different from bash or any other shell your used to?<br />
+<!--more--></p>
+<ol>
+	<li><strong>It is very similar to bash</strong> what makes it very easy to learn. There is nothing to learn when you&#8217;re used to bash because everything works exactly like bash but you get a lot of extra&#8217;s.</li>
+	<li><strong>It has really cool autocomplete functionality</strong>.
+	<ul>
+		<li>It can present suggestions in a menu that you can navigate in with your arrow keys</li>
+		<li>It can complete command options (typing <code>ls -&lt;tab&gt;</code> gives you possible actions and it&#8217;s meaning).</li>
+		<li>It can complete hosts from your hosts file when using network commands or ssh&#8217;s known_hosts file when using ssh, &#8230;</li>
+	</ul></li>
+	<li><strong>Typo correction</strong><br />
+How many times have you typed small errors like <code>ssj remote_server</code> instead of <code>ssh remote_server</code>? When that happens with zsh I get a question like <code>zsh: correct 'ssj' to 'ssh' [nyae]?</code> Very cool indeed.</li>
+	<li><strong>Intelligent history</strong>
+	<ul>
+		<li><strong>Shared history across sessions</strong>: How many times have you lost that super complex command from your history because you had more than one terminal window open? No more with zsh!</li>
+		<li><strong>prefix filtered history</strong>: No more browsing through your complete history to find that complex command you can&#8217;t remember completely. Type the start of a command and then use your up arrow key to navigate through your filtered history containing only commands starting with the part you already typed.</li>
+	</ul></li>
+	<li><strong>Oh-my-zsh</strong>: This is an awesome extension for zsh. It features extra functions and auto-complete helpers, themes and a configurable plugin system. You can find it <a href="http://github.com/robbyrussell/oh-my-zsh">here</a>. You can find my fork with my custom theme and a plugin for iTerm <a href="http://github.com/jellehelsen/oh-my-zsh">here</a>. You should try it, it really makes switching to zsh worth it.</li>
+</ol>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Best wishes]]></title>
+    <link href="http://www.hcode.be/2009/01/01/best-wishes.html"/>
+    <updated>2009-01-01T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2009/01/01/best-wishes</id>
+    <content type="html"><![CDATA[<p><span class="caps">HCODE</span> wishes everybody a very healthy and succesful 2009. <br />
+<span class="caps">HCODE</span> wenst iedereen een succesvol en gezond 2009.</p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Making Mac OS X ipfailover work correctly]]></title>
+    <link href="http://www.hcode.be/2008/08/02/making-mac-os-x-ipfailover-work-correctly.html"/>
+    <updated>2008-08-02T00:00:00+02:00</updated>
+    <id>http://www.hcode.be/2008/08/02/making-mac-os-x-ipfailover-work-correctly</id>
+    <content type="html"><![CDATA[IP failover is a wonderful technology. The Mac OS X implementation does have a major problem. <!--more-->When the fallen host comes back online, it will find a duplicate ip address and disables it&#8217;s network interface. So bringing the failed host back online requires you to bring down the failover host and thus making you service unavailable. There is a way to avoid this problem. 
+<p>Create a StartupItem with one line:</p>
+<pre>
+ifconfig en0 1.2.3.4
+</pre>
+<p>
+This will force your host online, ignoring the fact that there is another host online with the same ip address. After this the failover host &#8220;sees&#8221; the host coming online and will release the ip address.
+</p>
+<p>Usualy AFP refuses to start automatically after booting so I start it manually with the same script:
+  <pre>/usr/sbin/serveradmin start afp</pre>
+</p>
+<p>An example StartupItem can be found <a href="http://www.hcode.be/wordpress/wp-content/uploads/2008/12/ipfallback.zip" title="IPFallback.zip">here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kerberos and load balancing]]></title>
+    <link href="http://www.hcode.be/2008/07/24/kerberos-and-load-balancing.html"/>
+    <updated>2008-07-24T00:00:00+02:00</updated>
+    <id>http://www.hcode.be/2008/07/24/kerberos-and-load-balancing</id>
+    <content type="html"><![CDATA[Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p>
+      It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
+    </p>
+    <h4>
+      Step 1: Setting up DNS
+    </h4>
+    <p>
+      The first thing to configure when setting up kerberos is always DNS. Usually when using round robin you configure a different A record for each host. Then you would setup 1 CNAME record pointing to those A records. But: Kerberos is very dependent a A records and PTR records for each host. So to satisfy both I created 2 A records, both with the same name, but a different ip address. Then I created a PTR record for each ip address, both pointing to the same name.
+    </p>
+    <ul>
+      <li>Two A records for homes.example.com with 2 ip adresses 192.168.0.2 and 192.168.0.3
+      </li>
+      <li>PTR records for both ip addresses pointing to homes.example.com
+      </li>
+    </ul>
+    <h4>
+      Step 2: Setting up Kerberos
+    </h4>
+    <p>
+      I tested this setup on Mac OS X Server 10.5. This means kerberos setup is a little different than on other platforms. The principle remains the same on other platforms.
+    </p>
+    <ul>
+      <li>First configure both servers to use kerberos. On Mac OS X this is as simple as clicking a button.
+      </li>
+      <li>If you&#8217;re working with Mac OS X Server your kerberos should be working automatically. After binding your second server to the directory, the kerberos configuration on the first host will break. This is due to the way the keytab is created. Normally it is created by doing ktadd in kadmin. Mac OS X Server does this automatically for you. This causes the version number of the hosts principle to be incremented. This means the keytab of host 1 is out of date.
+      </li>
+      <li>Next, copy the necessary keytab entries using ktutil or copy the complete keytab file from host 2 back to host 1. Since you already have extensive knowledge of kerberos I assume you know how it&#8217;s done. For those of you who don&#8217;t: 
+        <ul>
+          <li>to start ktutil on the commandline just open a terminal window and type <pre>ktutil</pre></li>
+          <li>to read in the keytab of both hosts type <pre>rkt /path/to/keypath</pre></li>
+          <li>list all the loaded entries and their slot numbers with <pre>list</pre></li>
+          <li>delete all the unnecessary entries with (replace [slot with the correct slot number from the previous step])<pre>delent [slot]</pre></li>
+          <li>write out the remaining entries to a new keytab file with <pre>wkt /path/to/new/keytab</pre></li>
+        </ul>
+      </li>
+      <li>install the new keytab file on both servers</li>
+    </ul>
+    <p>
+      This should get you up and running. You should now have a load-balanced, kerberized server setup. I use it for afp home directories, but it should work for any service.</p>
+    <p>
+       I only tested this with Mac OS X 10.5 Server, but the principles of kerberos are the same on every platform, so it should work on other platforms but your milage may vary.
+    </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updated alternative activerecordproxies with a rucola plugin]]></title>
+    <link href="http://www.hcode.be/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin.html"/>
+    <updated>2008-02-07T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin</id>
+    <content type="html"><![CDATA[<p>I have recently updated my alternative activerecordproxy class and created a rucola plugin for it. The name of the class is now <span class="caps">HCODE</span>::AltActiveRecordProxy, but this may change in the future since I&#8217;ve been mailing with Eloy Duran about merging my changes into RubyCocoa.<br />
+<!--more--><br />
+The updated altactiverecordproxy source file can be downloaded <a href="http://www.hcode.be/downloads/alt_activerecord_proxy.rb">here</a> . The rucola plugin can be found <a href="http://www.hcode.be/wordpress/wp-content/uploads/2008/02/alt-activerecord-proxies.zip">here</a></p>
+<p>Updated: a subversion repository has been set up. You can now install the plugin in your rucola application with the following command:</p>
+<div>
+<pre><code class='bash'>./script/plugin install https://svn.hcode.be/trunk/alt_activerecord_proxies</code></pre>
+</div>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple Rucola console script]]></title>
+    <link href="http://www.hcode.be/2008/01/29/simple-rucola-console-script.html"/>
+    <updated>2008-01-29T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/01/29/simple-rucola-console-script</id>
+    <content type="html"><![CDATA[<p>I made a small script to help in debugging rucola projects. It will start an interactive irb session and boot your rucola app in the test environment.I saved it in ‘script/console’. You can use it to experiment with your classes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/env ruby</span>
+</span><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RUBYCOCOA_ROOT&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RUBYCOCOA_ENV&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+</span><span class='line'><span class="n">libs</span> <span class="o">=</span> <span class="s2">&quot;-r rubygems&quot;</span>
+</span><span class='line'><span class="n">libs</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot; -r rucola&quot;</span>
+</span><span class='line'><span class="n">libs</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot; -r </span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RUBYCOCOA_ROOT&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">/config/boot&quot;</span>
+</span><span class='line'><span class="nb">exec</span> <span class="s2">&quot;irb </span><span class="si">#{</span><span class="n">libs</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Alternative ActiveRecordProxies]]></title>
+    <link href="http://www.hcode.be/2008/01/25/alternative-activerecordproxies.html"/>
+    <updated>2008-01-25T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2008/01/25/alternative-activerecordproxies</id>
+    <content type="html"><![CDATA[<p>The original ActiveRecordProxies have one very annoying problem. When you change a value on an object, the object is immediately saved to the database. This way you miss the best part about the Active Record pattern and it makes bindings unusable. When a user changes a value in the view, he should be able to save or reload. Saving the change immediately to the database would make that almost impossible.</p>
+<!--more-->
+<p>At first I tried fixing ActiveRecordProxy myself, but that didn&#8217;t work. So I decided to start from scratch. The result of can be downloaded <a href="http://www.hcode.be/downloads/hcode_activerecord_proxy.rb">here</a> </p>
+<p>What&#8217;s different from the normal ActiveRecordProxy class:
+  <ul>
+    <li>support for save and reload.</li>
+    <li>minimal support for validations. If you use saveWithError, an NSError object is returned when saving fails. The userDict of this error should contain the validation errors.</li>
+    <li><s>rails like setterMethods: you can now use <pre>CustomerProxy.name = "test"</pre> instead of <pre>CustomerProxy.setValue_forKey("test", :name)</pre></s>
+(Updated: this already seems to work on normal ActiveRecordProxy objects)</li>
+  </ul>
+</p>
+
+To use it, put it in your load path and use it as your proxy superclass. If you&#8217;re using rucola, I will post a plugin in a couple of days. If you&#8217;re not using it yet, you should <a href="http://rucola.rubyforge.org/">check it out</a>.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Leopard Kerberos configuration mayhem]]></title>
+    <link href="http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
+    <updated>2007-12-10T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem</id>
+    <content type="html"><![CDATA[<p>Editing the file <code>/Library/Preferences/edu.mit.Kerberos</code> might not always get you the expected result in Leopard. After editing my kerberos realm with kerberos.app, I didn&#8217;t see the expected changes. After sniffing on the network I realized the client was still trying to connect to the old kdc server. It took me quite some time to figure out why the change in the configuration file did not cause the client to use the new kdc.</p>
+
+<!--more-->
+
+
+<p>It appears there is a record in the local DirectoryService that overrules the old configuration file. If you try to find it using dscl or Workgroup Manager you can find it at <code>/Local/Default/config/Kerberos:EXAMPLE.COM</code>. This record contains an XMLPlist object with the kerberos configuration. This is what the XMLPlist attribute should look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>KADM_List<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kadm.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>KDC_List<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kdc1.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kcc2.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mac OS X Server has used this format before to distribute kerberos configuration to clients. On Tiger this record in the Open Directory server would be used to create the file <code>/Library/Preferences/edu.mit.Kerberos</code>. On Leopard this record is duplicated to the local directory and this record overrules the configuration in the edu.mit.Kerberos file. If you are changing your kerberos configuration by changing the edu.mit.Kerberos file and your changes do not seem to work, check your local directory for kerberos records. The easiest way to do this is by using Workgroup Manager.
+You can also edit the directory service record directly. It is stored in a text file at <code>/var/db/dslocal/nodes/Default/config/Kerberos\:HCODE.BE.plist</code>. The record itself is also a plist file so all the xml entities should be encoded. This is what the file should look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>XMLPlist<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;quot;</span>1.0<span class="ni">&amp;quot;</span> encoding=<span class="ni">&amp;quot;</span>UTF-8<span class="ni">&amp;quot;</span>?<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>!DOCTYPE plist PUBLIC <span class="ni">&amp;quot;</span>-//Apple//DTD PLIST 1.0//EN<span class="ni">&amp;quot;</span> <span class="ni">&amp;quot;</span>http://www.apple.com/DTDs/PropertyList-1.0.dtd<span class="ni">&amp;quot;&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plist version=<span class="ni">&amp;quot;</span>1.0<span class="ni">&amp;quot;&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>KADM_List<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kadm.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>KDC_List<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kdc1.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kcc2.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plist<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Kerberos:EXAMPLE.COM<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Open source software on Mac OS X done right]]></title>
+    <link href="http://www.hcode.be/2007/12/09/open-source-software-on-mac-os-x-done-right.html"/>
+    <updated>2007-12-09T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2007/12/09/open-source-software-on-mac-os-x-done-right</id>
+    <content type="html"><![CDATA[<p>Installing open source software on Mac OS X can be a pain in the ass. Now there is an alternative to <a href="http://www.finkproject.org/">Fink</a> or <a href="http://www.macports.org/">MacPorts</a>. The <a href="http://www.rudix.org/">Rudix</a> project delivers open source software for Mac OS X in the Right Way. Everything is delivered as a standard Mac OS X installer package. Just double click to install. How cool is that?</p>]]></content>
+  </entry>
+  
+</feed>

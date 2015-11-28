@@ -1,0 +1,278 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Leopard Kerberos configuration mayhem - #!/dev/random</title>
+	<meta name="author" content="Jelle Helsen">
+
+	
+	<meta name="description" content="Editing the file /Library/Preferences/edu.mit.Kerberos might not always get you the expected result in Leopard. After editing my kerberos realm with &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="#!/dev/random" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">#!/dev/random</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:www.hcode.be">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/jellehelsen" title="Twitter">Twitter</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:www.hcode.be">
+	</form>
+</nav>
+
+</header>
+	
+		
+<div id="banner" class="inner">
+	<div class="container">
+		<ul class="feed"></ul>
+	</div>
+	<small><a href="http://twitter.com/jellehelsen">jellehelsen</a> @ <a href="http://twitter.com">Twitter</a></small>
+	<div class="loading">Loading...</div>
+</div>
+<script src="/javascripts/twitter.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('#banner').getTwitterFeed('jellehelsen', 4, false);
+	})(jQuery);
+</script>
+
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Leopard Kerberos Configuration Mayhem</h2>
+	<div class="entry-content"><p>Editing the file <code>/Library/Preferences/edu.mit.Kerberos</code> might not always get you the expected result in Leopard. After editing my kerberos realm with kerberos.app, I didn&#8217;t see the expected changes. After sniffing on the network I realized the client was still trying to connect to the old kdc server. It took me quite some time to figure out why the change in the configuration file did not cause the client to use the new kdc.</p>
+
+<!--more-->
+
+
+<p>It appears there is a record in the local DirectoryService that overrules the old configuration file. If you try to find it using dscl or Workgroup Manager you can find it at <code>/Local/Default/config/Kerberos:EXAMPLE.COM</code>. This record contains an XMLPlist object with the kerberos configuration. This is what the XMLPlist attribute should look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>KADM_List<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kadm.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>KDC_List<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kdc1.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>kcc2.example.com<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mac OS X Server has used this format before to distribute kerberos configuration to clients. On Tiger this record in the Open Directory server would be used to create the file <code>/Library/Preferences/edu.mit.Kerberos</code>. On Leopard this record is duplicated to the local directory and this record overrules the configuration in the edu.mit.Kerberos file. If you are changing your kerberos configuration by changing the edu.mit.Kerberos file and your changes do not seem to work, check your local directory for kerberos records. The easiest way to do this is by using Workgroup Manager.
+You can also edit the directory service record directly. It is stored in a text file at <code>/var/db/dslocal/nodes/Default/config/Kerberos\:HCODE.BE.plist</code>. The record itself is also a plist file so all the xml entities should be encoded. This is what the file should look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>XMLPlist<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;quot;</span>1.0<span class="ni">&amp;quot;</span> encoding=<span class="ni">&amp;quot;</span>UTF-8<span class="ni">&amp;quot;</span>?<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>!DOCTYPE plist PUBLIC <span class="ni">&amp;quot;</span>-//Apple//DTD PLIST 1.0//EN<span class="ni">&amp;quot;</span> <span class="ni">&amp;quot;</span>http://www.apple.com/DTDs/PropertyList-1.0.dtd<span class="ni">&amp;quot;&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plist version=<span class="ni">&amp;quot;</span>1.0<span class="ni">&amp;quot;&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>KADM_List<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kadm.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>KDC_List<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kdc1.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>kcc2.example.com<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plist<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Kerberos:EXAMPLE.COM<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-10T00:00:00+01:00" pubdate data-updated="true">Dec 10<span>th</span>, 2007</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/directory-systems/'>Directory Systems</a>, <a class='category' href='/blog/categories/mac-os-x/'>Mac OS X</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    Jelle Helsen
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'hcode';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+<script type="text/javascript">
+setTimeout(function(){var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0014/6365.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Directory Systems | #!/dev/random]]></title>
+  <link href="http://www.hcode.be/blog/categories/directory-systems/atom.xml" rel="self"/>
+  <link href="http://www.hcode.be/"/>
+  <updated>2015-11-28T16:07:54+01:00</updated>
+  <id>http://www.hcode.be/</id>
+  <author>
+    <name><![CDATA[Jelle Helsen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Kerberos and load balancing]]></title>
+    <link href="http://www.hcode.be/2008/07/24/kerberos-and-load-balancing.html"/>
+    <updated>2008-07-24T00:00:00+02:00</updated>
+    <id>http://www.hcode.be/2008/07/24/kerberos-and-load-balancing</id>
+    <content type="html"><![CDATA[<p>Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p></p>
+
+<pre><code>  It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
+&lt;/p&gt;
+&lt;h4&gt;
+  Step 1: Setting up DNS
+&lt;/h4&gt;
+&lt;p&gt;
+  The first thing to configure when setting up kerberos is always DNS. Usually when using round robin you configure a different A record for each host. Then you would setup 1 CNAME record pointing to those A records. But: Kerberos is very dependent a A records and PTR records for each host. So to satisfy both I created 2 A records, both with the same name, but a different ip address. Then I created a PTR record for each ip address, both pointing to the same name.
+&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Two A records for homes.example.com with 2 ip adresses 192.168.0.2 and 192.168.0.3
+  &lt;/li&gt;
+  &lt;li&gt;PTR records for both ip addresses pointing to homes.example.com
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;
+  Step 2: Setting up Kerberos
+&lt;/h4&gt;
+&lt;p&gt;
+  I tested this setup on Mac OS X Server 10.5. This means kerberos setup is a little different than on other platforms. The principle remains the same on other platforms.
+&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;First configure both servers to use kerberos. On Mac OS X this is as simple as clicking a button.
+  &lt;/li&gt;
+  &lt;li&gt;If you're working with Mac OS X Server your kerberos should be working automatically. After binding your second server to the directory, the kerberos configuration on the first host will break. This is due to the way the keytab is created. Normally it is created by doing ktadd in kadmin. Mac OS X Server does this automatically for you. This causes the version number of the hosts principle to be incremented. This means the keytab of host 1 is out of date.
+  &lt;/li&gt;
+  &lt;li&gt;Next, copy the necessary keytab entries using ktutil or copy the complete keytab file from host 2 back to host 1. Since you already have extensive knowledge of kerberos I assume you know how it's done. For those of you who don't: 
+    &lt;ul&gt;
+      &lt;li&gt;to start ktutil on the commandline just open a terminal window and type &lt;pre&gt;ktutil&lt;/pre&gt;&lt;/li&gt;
+      &lt;li&gt;to read in the keytab of both hosts type &lt;pre&gt;rkt /path/to/keypath&lt;/pre&gt;&lt;/li&gt;
+      &lt;li&gt;list all the loaded entries and their slot numbers with &lt;pre&gt;list&lt;/pre&gt;&lt;/li&gt;
+      &lt;li&gt;delete all the unnecessary entries with (replace [slot with the correct slot number from the previous step])&lt;pre&gt;delent [slot]&lt;/pre&gt;&lt;/li&gt;
+      &lt;li&gt;write out the remaining entries to a new keytab file with &lt;pre&gt;wkt /path/to/new/keytab&lt;/pre&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;install the new keytab file on both servers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  This should get you up and running. You should now have a load-balanced, kerberized server setup. I use it for afp home directories, but it should work for any service.&lt;/p&gt;
+&lt;p&gt;
+   I only tested this with Mac OS X 10.5 Server, but the principles of kerberos are the same on every platform, so it should work on other platforms but your milage may vary.
+&lt;/p&gt;
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Leopard Kerberos configuration mayhem]]></title>
+    <link href="http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
+    <updated>2007-12-10T00:00:00+01:00</updated>
+    <id>http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem</id>
+    <content type="html"><![CDATA[<p>Editing the file <code>/Library/Preferences/edu.mit.Kerberos</code> might not always get you the expected result in Leopard. After editing my kerberos realm with kerberos.app, I didn't see the expected changes. After sniffing on the network I realized the client was still trying to connect to the old kdc server. It took me quite some time to figure out why the change in the configuration file did not cause the client to use the new kdc.</p>
+
+<!--more-->
+
+
+<p>It appears there is a record in the local DirectoryService that overrules the old configuration file. If you try to find it using dscl or Workgroup Manager you can find it at <code>/Local/Default/config/Kerberos:EXAMPLE.COM</code>. This record contains an XMLPlist object with the kerberos configuration. This is what the XMLPlist attribute should look like:</p>
+
+<p>``` xml</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+  &lt;dict&gt;
+    &lt;key&gt;KADM_List&lt;/key&gt;
+    &lt;array&gt;
+      &lt;string&gt;kadm.example.com&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;KDC_List&lt;/key&gt;
+    &lt;array&gt;
+      &lt;string&gt;kdc1.example.com&lt;/string&gt;
+      &lt;string&gt;kcc2.example.com&lt;/string&gt;
+    &lt;/array&gt;
+  &lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>```</p>
+
+<p>Mac OS X Server has used this format before to distribute kerberos configuration to clients. On Tiger this record in the Open Directory server would be used to create the file <code>/Library/Preferences/edu.mit.Kerberos</code>. On Leopard this record is duplicated to the local directory and this record overrules the configuration in the edu.mit.Kerberos file. If you are changing your kerberos configuration by changing the edu.mit.Kerberos file and your changes do not seem to work, check your local directory for kerberos records. The easiest way to do this is by using Workgroup Manager.
+You can also edit the directory service record directly. It is stored in a text file at <code>/var/db/dslocal/nodes/Default/config/Kerberos\:HCODE.BE.plist</code>. The record itself is also a plist file so all the xml entities should be encoded. This is what the file should look like:</p>
+
+<p>``` xml</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+  &lt;key&gt;XMLPlist&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;
+      &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+      &amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;
+      &amp;lt;plist version=&amp;quot;1.0&amp;quot;&amp;gt;
+        &amp;lt;dict&amp;gt;
+          &amp;lt;key&amp;gt;KADM_List&amp;lt;/key&amp;gt;
+          &amp;lt;array&amp;gt;
+            &amp;lt;string&amp;gt;kadm.example.com&amp;lt;/string&amp;gt;
+          &amp;lt;/array&amp;gt;
+          &amp;lt;key&amp;gt;KDC_List&amp;lt;/key&amp;gt;
+          &amp;lt;array&amp;gt;
+            &amp;lt;string&amp;gt;kdc1.example.com&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;kcc2.example.com&amp;lt;/string&amp;gt;
+          &amp;lt;/array&amp;gt;
+        &amp;lt;/dict&amp;gt;
+      &amp;lt;/plist&amp;gt;       
+    &lt;/string&gt;
+  &lt;/array&gt;
+  &lt;key&gt;name&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;Kerberos:EXAMPLE.COM&lt;/string&gt;
+  &lt;/array&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>

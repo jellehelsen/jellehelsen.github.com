@@ -1,0 +1,202 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Kerberos and load balancing - #!/dev/random</title>
+	<meta name="author" content="Jelle Helsen">
+
+	
+	<meta name="description" content="Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="#!/dev/random" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">#!/dev/random</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:www.hcode.be">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/jellehelsen" title="Twitter">Twitter</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:www.hcode.be">
+	</form>
+</nav>
+
+</header>
+	
+		
+<div id="banner" class="inner">
+	<div class="container">
+		<ul class="feed"></ul>
+	</div>
+	<small><a href="http://twitter.com/jellehelsen">jellehelsen</a> @ <a href="http://twitter.com">Twitter</a></small>
+	<div class="loading">Loading...</div>
+</div>
+<script src="/javascripts/twitter.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('#banner').getTwitterFeed('jellehelsen', 4, false);
+	})(jQuery);
+</script>
+
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Kerberos and Load Balancing</h2>
+	<div class="entry-content">Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p>
+      It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
+    </p>
+    <h4>
+      Step 1: Setting up DNS
+    </h4>
+    <p>
+      The first thing to configure when setting up kerberos is always DNS. Usually when using round robin you configure a different A record for each host. Then you would setup 1 CNAME record pointing to those A records. But: Kerberos is very dependent a A records and PTR records for each host. So to satisfy both I created 2 A records, both with the same name, but a different ip address. Then I created a PTR record for each ip address, both pointing to the same name.
+    </p>
+    <ul>
+      <li>Two A records for homes.example.com with 2 ip adresses 192.168.0.2 and 192.168.0.3
+      </li>
+      <li>PTR records for both ip addresses pointing to homes.example.com
+      </li>
+    </ul>
+    <h4>
+      Step 2: Setting up Kerberos
+    </h4>
+    <p>
+      I tested this setup on Mac OS X Server 10.5. This means kerberos setup is a little different than on other platforms. The principle remains the same on other platforms.
+    </p>
+    <ul>
+      <li>First configure both servers to use kerberos. On Mac OS X this is as simple as clicking a button.
+      </li>
+      <li>If you&#8217;re working with Mac OS X Server your kerberos should be working automatically. After binding your second server to the directory, the kerberos configuration on the first host will break. This is due to the way the keytab is created. Normally it is created by doing ktadd in kadmin. Mac OS X Server does this automatically for you. This causes the version number of the hosts principle to be incremented. This means the keytab of host 1 is out of date.
+      </li>
+      <li>Next, copy the necessary keytab entries using ktutil or copy the complete keytab file from host 2 back to host 1. Since you already have extensive knowledge of kerberos I assume you know how it&#8217;s done. For those of you who don&#8217;t: 
+        <ul>
+          <li>to start ktutil on the commandline just open a terminal window and type <pre>ktutil</pre></li>
+          <li>to read in the keytab of both hosts type <pre>rkt /path/to/keypath</pre></li>
+          <li>list all the loaded entries and their slot numbers with <pre>list</pre></li>
+          <li>delete all the unnecessary entries with (replace [slot with the correct slot number from the previous step])<pre>delent [slot]</pre></li>
+          <li>write out the remaining entries to a new keytab file with <pre>wkt /path/to/new/keytab</pre></li>
+        </ul>
+      </li>
+      <li>install the new keytab file on both servers</li>
+    </ul>
+    <p>
+      This should get you up and running. You should now have a load-balanced, kerberized server setup. I use it for afp home directories, but it should work for any service.</p>
+    <p>
+       I only tested this with Mac OS X 10.5 Server, but the principles of kerberos are the same on every platform, so it should work on other platforms but your milage may vary.
+    </p>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-24T00:00:00+02:00" pubdate data-updated="true">Jul 24<span>th</span>, 2008</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/directory-systems/'>Directory Systems</a>, <a class='category' href='/blog/categories/mac-os-x/'>Mac OS X</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    Jelle Helsen
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+<script type="text/javascript">
+setTimeout(function(){var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0014/6365.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Alternative ActiveRecordProxies - #!/dev/random</title>
+	<meta name="author" content="Jelle Helsen">
+
+	
+	<meta name="description" content="The original ActiveRecordProxies have one very annoying problem. When you change a value on an object, the object is immediately saved to the &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="#!/dev/random" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">#!/dev/random</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:www.hcode.be">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/jellehelsen" title="Twitter">Twitter</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:www.hcode.be">
+	</form>
+</nav>
+
+</header>
+	
+		
+<div id="banner" class="inner">
+	<div class="container">
+		<ul class="feed"></ul>
+	</div>
+	<small><a href="http://twitter.com/jellehelsen">jellehelsen</a> @ <a href="http://twitter.com">Twitter</a></small>
+	<div class="loading">Loading...</div>
+</div>
+<script src="/javascripts/twitter.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('#banner').getTwitterFeed('jellehelsen', 4, false);
+	})(jQuery);
+</script>
+
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Alternative ActiveRecordProxies</h2>
+	<div class="entry-content"><p>The original ActiveRecordProxies have one very annoying problem. When you change a value on an object, the object is immediately saved to the database. This way you miss the best part about the Active Record pattern and it makes bindings unusable. When a user changes a value in the view, he should be able to save or reload. Saving the change immediately to the database would make that almost impossible.</p>
+<!--more-->
+<p>At first I tried fixing ActiveRecordProxy myself, but that didn&#8217;t work. So I decided to start from scratch. The result of can be downloaded <a href="http://www.hcode.be/downloads/hcode_activerecord_proxy.rb">here</a> </p>
+<p>What&#8217;s different from the normal ActiveRecordProxy class:
+  <ul>
+    <li>support for save and reload.</li>
+    <li>minimal support for validations. If you use saveWithError, an NSError object is returned when saving fails. The userDict of this error should contain the validation errors.</li>
+    <li><s>rails like setterMethods: you can now use <pre>CustomerProxy.name = "test"</pre> instead of <pre>CustomerProxy.setValue_forKey("test", :name)</pre></s>
+(Updated: this already seems to work on normal ActiveRecordProxy objects)</li>
+  </ul>
+</p>
+
+To use it, put it in your load path and use it as your proxy superclass. If you&#8217;re using rucola, I will post a plugin in a couple of days. If you&#8217;re not using it yet, you should <a href="http://rucola.rubyforge.org/">check it out</a>.
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-25T00:00:00+01:00" pubdate data-updated="true">Jan 25<span>th</span>, 2008</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/rubycocoa/'>RubyCocoa</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    Jelle Helsen
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'hcode';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+<script type="text/javascript">
+setTimeout(function(){var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0014/6365.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+</script>
+
+
+</body>
+</html>
