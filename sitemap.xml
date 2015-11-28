@@ -1,65 +1,71 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://www.hcode.be/2007/12/09/open-source-software-on-mac-os-x-done-right.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://www.hcode.be/2008/01/25/alternative-activerecordproxies.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://www.hcode.be/2008/01/29/simple-rucola-console-script.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>
+            http://jellehelsen.github.com/2007/12/09/open-source-software-on-mac-os-x-done-right.html
+        </loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://www.hcode.be/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin.html
+            http://jellehelsen.github.com/2007/12/10/leopard-kerberos-configuration-mayhem.html
         </loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2008/07/24/kerberos-and-load-balancing.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2008/01/25/alternative-activerecordproxies.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2008/08/02/making-mac-os-x-ipfailover-work-correctly.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2008/01/29/simple-rucola-console-script.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2009/01/01/best-wishes.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>
+            http://jellehelsen.github.com/2008/02/07/updated-alternative-activerecordproxies-with-a-rucola-plugin.html
+        </loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2010/10/13/oh-my-zsh.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2008/07/24/kerberos-and-load-balancing.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2010/10/16/printing-booklets-with-pdfjam.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>
+            http://jellehelsen.github.com/2008/08/02/making-mac-os-x-ipfailover-work-correctly.html
+        </loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2010/11/29/ssh-password-guessing.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2009/01/01/best-wishes.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2010/12/03/ssh-password-guessing-part2.html</loc>
-        <lastmod>2012-11-18T21:39:11+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2010/10/13/oh-my-zsh.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/2012/11/18/how-not-to-do-customer-support.html</loc>
-        <lastmod>2012-11-20T00:17:02+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2010/10/16/printing-booklets-with-pdfjam.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/blog/archives/</loc>
-        <lastmod>2012-11-20T00:17:02+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2010/11/29/ssh-password-guessing.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://www.hcode.be/</loc>
-        <lastmod>2012-11-20T00:17:02+01:00</lastmod>
+        <loc>http://jellehelsen.github.com/2010/12/03/ssh-password-guessing-part2.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jellehelsen.github.com/2012/11/18/how-not-to-do-customer-support.html</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jellehelsen.github.com/blog/archives/</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jellehelsen.github.com/</loc>
+        <lastmod>2015-11-28T16:22:47+01:00</lastmod>
     </url>
 </urlset>

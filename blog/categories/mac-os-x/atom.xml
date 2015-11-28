@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Mac OS X | #!/dev/random]]></title>
-  <link href="http://www.hcode.be/blog/categories/mac-os-x/atom.xml" rel="self"/>
-  <link href="http://www.hcode.be/"/>
-  <updated>2015-11-28T16:07:54+01:00</updated>
-  <id>http://www.hcode.be/</id>
+  <link href="http://jellehelsen.github.com/blog/categories/mac-os-x/atom.xml" rel="self"/>
+  <link href="http://jellehelsen.github.com/"/>
+  <updated>2015-11-28T16:26:02+01:00</updated>
+  <id>http://jellehelsen.github.com/</id>
   <author>
     <name><![CDATA[Jelle Helsen]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Making Mac OS X ipfailover work correctly]]></title>
-    <link href="http://www.hcode.be/2008/08/02/making-mac-os-x-ipfailover-work-correctly.html"/>
+    <link href="http://jellehelsen.github.com/2008/08/02/making-mac-os-x-ipfailover-work-correctly.html"/>
     <updated>2008-08-02T00:00:00+02:00</updated>
-    <id>http://www.hcode.be/2008/08/02/making-mac-os-x-ipfailover-work-correctly</id>
+    <id>http://jellehelsen.github.com/2008/08/02/making-mac-os-x-ipfailover-work-correctly</id>
     <content type="html"><![CDATA[<p>IP failover is a wonderful technology. The Mac OS X implementation does have a major problem. <!--more-->When the fallen host comes back online, it will find a duplicate ip address and disables it's network interface. So bringing the failed host back online requires you to bring down the failover host and thus making you service unavailable. There is a way to avoid this problem.</p>
 
 <p>Create a StartupItem with one line:</p>
@@ -45,9 +45,9 @@ This will force your host online, ignoring the fact that there is another host o
   
   <entry>
     <title type="html"><![CDATA[Kerberos and load balancing]]></title>
-    <link href="http://www.hcode.be/2008/07/24/kerberos-and-load-balancing.html"/>
+    <link href="http://jellehelsen.github.com/2008/07/24/kerberos-and-load-balancing.html"/>
     <updated>2008-07-24T00:00:00+02:00</updated>
-    <id>http://www.hcode.be/2008/07/24/kerberos-and-load-balancing</id>
+    <id>http://jellehelsen.github.com/2008/07/24/kerberos-and-load-balancing</id>
     <content type="html"><![CDATA[<p>Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p></p>
 
 <pre><code>  It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
@@ -97,9 +97,9 @@ This will force your host online, ignoring the fact that there is another host o
   
   <entry>
     <title type="html"><![CDATA[Leopard Kerberos configuration mayhem]]></title>
-    <link href="http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
+    <link href="http://jellehelsen.github.com/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
     <updated>2007-12-10T00:00:00+01:00</updated>
-    <id>http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem</id>
+    <id>http://jellehelsen.github.com/2007/12/10/leopard-kerberos-configuration-mayhem</id>
     <content type="html"><![CDATA[<p>Editing the file <code>/Library/Preferences/edu.mit.Kerberos</code> might not always get you the expected result in Leopard. After editing my kerberos realm with kerberos.app, I didn't see the expected changes. After sniffing on the network I realized the client was still trying to connect to the old kdc server. It took me quite some time to figure out why the change in the configuration file did not cause the client to use the new kdc.</p>
 
 <!--more-->
@@ -171,9 +171,9 @@ You can also edit the directory service record directly. It is stored in a text 
   
   <entry>
     <title type="html"><![CDATA[Open source software on Mac OS X done right]]></title>
-    <link href="http://www.hcode.be/2007/12/09/open-source-software-on-mac-os-x-done-right.html"/>
+    <link href="http://jellehelsen.github.com/2007/12/09/open-source-software-on-mac-os-x-done-right.html"/>
     <updated>2007-12-09T00:00:00+01:00</updated>
-    <id>http://www.hcode.be/2007/12/09/open-source-software-on-mac-os-x-done-right</id>
+    <id>http://jellehelsen.github.com/2007/12/09/open-source-software-on-mac-os-x-done-right</id>
     <content type="html"><![CDATA[<p>Installing open source software on Mac OS X can be a pain in the ass. Now there is an alternative to "Fink":http://www.finkproject.org/ or "MacPorts":http://www.macports.org/. The "Rudix":http://www.rudix.org/ project delivers open source software for Mac OS X in the Right Way. Everything is delivered as a standard Mac OS X installer package. Just double click to install. How cool is that?</p>
 ]]></content>
   </entry>

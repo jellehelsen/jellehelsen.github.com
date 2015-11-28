@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Directory Systems | #!/dev/random]]></title>
-  <link href="http://www.hcode.be/blog/categories/directory-systems/atom.xml" rel="self"/>
-  <link href="http://www.hcode.be/"/>
-  <updated>2015-11-28T16:07:54+01:00</updated>
-  <id>http://www.hcode.be/</id>
+  <link href="http://jellehelsen.github.com/blog/categories/directory-systems/atom.xml" rel="self"/>
+  <link href="http://jellehelsen.github.com/"/>
+  <updated>2015-11-28T16:26:02+01:00</updated>
+  <id>http://jellehelsen.github.com/</id>
   <author>
     <name><![CDATA[Jelle Helsen]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Kerberos and load balancing]]></title>
-    <link href="http://www.hcode.be/2008/07/24/kerberos-and-load-balancing.html"/>
+    <link href="http://jellehelsen.github.com/2008/07/24/kerberos-and-load-balancing.html"/>
     <updated>2008-07-24T00:00:00+02:00</updated>
-    <id>http://www.hcode.be/2008/07/24/kerberos-and-load-balancing</id>
+    <id>http://jellehelsen.github.com/2008/07/24/kerberos-and-load-balancing</id>
     <content type="html"><![CDATA[<p>Setting up Kerberos while doing DNS based round robbing load balancing can be a pain. Moreover, DNS round robbing is seriously conflicting with the principles of Kerberos. There is a way to get it running, but it requires a very tedious setup. <!--more-->    <p></p>
 
 <pre><code>  It requires you to hack around some of the security features of kerberos, so please do not try this if you do not have extensive experience with kerberos.
@@ -67,9 +67,9 @@
   
   <entry>
     <title type="html"><![CDATA[Leopard Kerberos configuration mayhem]]></title>
-    <link href="http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
+    <link href="http://jellehelsen.github.com/2007/12/10/leopard-kerberos-configuration-mayhem.html"/>
     <updated>2007-12-10T00:00:00+01:00</updated>
-    <id>http://www.hcode.be/2007/12/10/leopard-kerberos-configuration-mayhem</id>
+    <id>http://jellehelsen.github.com/2007/12/10/leopard-kerberos-configuration-mayhem</id>
     <content type="html"><![CDATA[<p>Editing the file <code>/Library/Preferences/edu.mit.Kerberos</code> might not always get you the expected result in Leopard. After editing my kerberos realm with kerberos.app, I didn't see the expected changes. After sniffing on the network I realized the client was still trying to connect to the old kdc server. It took me quite some time to figure out why the change in the configuration file did not cause the client to use the new kdc.</p>
 
 <!--more-->

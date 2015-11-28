@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: RubyCocoa | #!/dev/random]]></title>
-  <link href="http://www.hcode.be/blog/categories/rubycocoa/atom.xml" rel="self"/>
-  <link href="http://www.hcode.be/"/>
-  <updated>2015-11-28T16:07:54+01:00</updated>
-  <id>http://www.hcode.be/</id>
+  <link href="http://jellehelsen.github.com/blog/categories/rubycocoa/atom.xml" rel="self"/>
+  <link href="http://jellehelsen.github.com/"/>
+  <updated>2015-11-28T16:26:02+01:00</updated>
+  <id>http://jellehelsen.github.com/</id>
   <author>
     <name><![CDATA[Jelle Helsen]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Alternative ActiveRecordProxies]]></title>
-    <link href="http://www.hcode.be/2008/01/25/alternative-activerecordproxies.html"/>
+    <link href="http://jellehelsen.github.com/2008/01/25/alternative-activerecordproxies.html"/>
     <updated>2008-01-25T00:00:00+01:00</updated>
-    <id>http://www.hcode.be/2008/01/25/alternative-activerecordproxies</id>
+    <id>http://jellehelsen.github.com/2008/01/25/alternative-activerecordproxies</id>
     <content type="html"><![CDATA[<p>The original ActiveRecordProxies have one very annoying problem. When you change a value on an object, the object is immediately saved to the database. This way you miss the best part about the Active Record pattern and it makes bindings unusable. When a user changes a value in the view, he should be able to save or reload. Saving the change immediately to the database would make that almost impossible.</p>
 
 
